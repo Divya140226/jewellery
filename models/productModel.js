@@ -144,8 +144,57 @@ var product = {
             data: result.rows
         });
     });
-}
+},
 
+ filterProduct: function (req, callback) {
+    console.log("kjhjdf");
+    
+  const {
+    category,
+    brand,
+
+    product,
+    minPrice,
+    maxPrice
+  } = req.query;
+
+  pool.query(`
+    SELECT p.*, 
+           c.name AS category_name, 
+           c.description AS category_description, 
+           b.name AS brand_name
+    FROM product p
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN brands b ON p.brand_id = b.id
+    WHERE
+      ($1::text IS NULL OR LOWER(c.name) LIKE LOWER('%' || $1 || '%')) AND
+      ($2::text IS NULL OR LOWER(b.name) LIKE LOWER('%' || $2 || '%')) AND
+      ($3::text IS NULL OR LOWER(p.name) LIKE LOWER('%' || $3 || '%')) AND
+      ($4::numeric IS NULL OR p.price >= $4) AND
+      ($5::numeric IS NULL OR p.price <= $5)
+    ORDER BY p.id DESC
+  `, [
+    category || null,
+    brand || null,
+    product || null,
+    minPrice || null,
+    maxPrice || null
+  ], function (err, result) {
+    if (err) {
+      console.log(err);
+      return callback(err, {
+        status: false,
+        message: 'Error while searching product'
+      });
+    }
+
+    return callback(null, {
+      status: true,
+      message: 'Fliter Products successfully',
+      data: result.rows
+    });
+  });
+}
 
 }
 

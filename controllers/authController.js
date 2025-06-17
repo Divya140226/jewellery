@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const pool = require('../models/db');
+
 const transporter = require('../commonFunction/emailSender');
 
-const { findUserByEmail, createUser, updateUserPassword,findUserByEmailOrMobile,createUserWithOnlyIdentifier  } = require('../models/userModel');
+const { findUserByEmail, createUser, updateUserPassword,findUserByEmailOrMobile,createUserWithOnlyIdentifier , updateUserDetails  } = require('../models/userModel');
 
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -159,6 +161,19 @@ exports.verifyLoginOtp = async (req, res) => {
   });
 
   res.json({ status: true, message: 'Login successful' });
+
+};
+exports.updateUserDetails = async (req, res) => {
+  const userId = req.params.id;
+  const { name, mobile, address } = req.body;
+
+  try {
+    await updateUserDetails(userId, { name, mobile, address });
+    res.json({ status: true, message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Profile update failed:', err);
+    res.status(500).json({ status: false, message: 'Failed to update profile' });
+  }
 };
 exports.logoutUser = (req, res) => {
   res.clearCookie('token');

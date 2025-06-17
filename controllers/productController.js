@@ -122,12 +122,30 @@ async function searchProductByName(req, res) {
     });
   }
 }
+async function filterProduct(req, res) {
+  try {
+    productModel.filterProduct(req, function (err, rows) {
+      if (err) {
+        return res.json({
+          status: false,
+          message: 'Error fetching products',
+          error: err
+        });
+      }
 
+      res.json(rows);
+    });
+  } catch (error) {
+    console.error('Error in filterProduct:', error);
+    res.status(500).json({ status: false, message: 'Internal Server Error' });
+  }
+}
 module.exports = {
   getAllProduct,
   addProduct,
   getProductById,
   updateProduct,
   deleteProduct,
-  searchProductByName
+  searchProductByName,
+  filterProduct
 };

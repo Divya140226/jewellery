@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notification Demo</title>
+</head>
+<body>
+  <h1>🔔 Notifications</h1>
+  <ul id="notifications"></ul>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:5000'); // connect to backend
+
+    socket.on('notification', function (message) {
+      const li = document.createElement('li');
+      li.textContent = message;
+      document.getElementById('notifications').appendChild(li);
+    });
+  </script>
+</body>
+</html>

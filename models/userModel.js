@@ -47,11 +47,18 @@ const createUserWithOnlyIdentifier = async (identifier) => {
   }
   return result.rows[0];
 };
-
+const updateUserDetails = async (userId, { name, mobile, address }) => {
+  await pool.query(
+    `
+     UPDATE profile_users SET name = $1, mobile = $2, address = $3 WHERE id = $4`,
+    [name, mobile, address, userId]
+  );
+};
 module.exports = {
   findUserByEmail,
   createUser,
   updateUserPassword,
   findUserByEmailOrMobile,
-  createUserWithOnlyIdentifier
+  createUserWithOnlyIdentifier,
+  updateUserDetails
 };
