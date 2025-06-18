@@ -100,7 +100,7 @@ var brands = {
         });
 
     },
-    deletebrands: function (req, callback) {
+    deleteBrands: function (req, callback) {
         pool.query(
             `DELETE FROM brands WHERE id=$1`,
             [req.params.id],

@@ -75,8 +75,11 @@ async function getAllCategories(req, res) {
     }
   }
   async function deleteCategories(req, res) {
+    
     try {
       categoriesModel.deleteCategories(req, function (err, rows) {
+        console.log(req);
+        
         if (err) {
           res.status(500).send({
             message: rows,

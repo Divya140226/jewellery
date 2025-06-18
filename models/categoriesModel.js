@@ -100,13 +100,13 @@ var categories = {
         });
 
     },
-    deletecategories: function (req, callback) {
+ deleteCategories: function (req, callback) {
         pool.query(
             `DELETE FROM categories WHERE id=$1`,
             [req.params.id],
             function (err, result) {
+               
                 if (err) {
-                    
                     callback(err, 'Error!! while Deleting datas');
                 } else if (result.rowCount == 0) {
                     callback('Error!! while Deleting datas', 'Error!!');

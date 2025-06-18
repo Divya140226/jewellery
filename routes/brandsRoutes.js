@@ -6,6 +6,6 @@ router.get('/', brandsController.getAllBrands);
 router.post('/add', brandsController.addBrands);
 router.get('/:id', brandsController.getBrandsById);
 router.put('/update/:id', brandsController.updateBrands);
-router.put('/delete/:id', brandsController.deleteBrands);
+router.delete('/delete/:id', brandsController.deleteBrands);
 
 module.exports = router;

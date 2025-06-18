@@ -103,5 +103,5 @@ module.exports = {
   getBrandsById,
   updateBrands,
   deleteBrands,
-  getAllBrands,
+ 
 };

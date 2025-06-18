@@ -13,5 +13,5 @@ router.post('/verify-login-otp', authController.verifyLoginOtp);
 router.post('/logout-user', authController.logoutUser);
 // router.put('/update-profile/:id', authController.updateUserDetails);
 
-router.put('/update-profile/:id', authController.updateUserDetails);
+router.put('/update-profile/:id',authenticate, authController.updateUserDetails);
 module.exports = router;
