@@ -6,7 +6,7 @@ const pool = require('./db');
 
 var cartItem = {
     getAllCartItem: function (req, callback) {
-        pool.query("SELECT * FROM cart_items ", function (err, result) {
+        pool.query(`SELECT c.*, pt.* FROM cart_items c LEFT JOIN profile_users p ON c.user_id = p.id LEFT JOIN product pt ON c.product_id = pt.id`, function (err, result) {
             if (err) {
                 response={
                     status:false,
@@ -52,7 +52,7 @@ var cartItem = {
     },
     getCartItemById: function (req, callback) {
         
-        pool.query("SELECT * FROM cart_items  where id=$1",[req.params.id], function (err, result) {
+        pool.query("SELECT c.*, pt.* FROM cart_items c LEFT JOIN profile_users p ON c.user_id = p.id LEFT JOIN product pt ON c.product_id = pt.id where c.id=$1",[req.params.id], function (err, result) {
             response={
                 status:false,
                 message:"Error!! while fetching datas"

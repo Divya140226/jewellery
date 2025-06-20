@@ -108,7 +108,7 @@ var reviews = {
         });
 
     },
-    deletereviews: function (req, callback) {
+    deleteReviews: function (req, callback) {
         pool.query(
             `DELETE FROM reviews WHERE id=$1`,
             [req.params.id],

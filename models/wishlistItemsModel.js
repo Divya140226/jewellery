@@ -6,7 +6,7 @@ const pool = require('./db');
 
 var WishlistItems = {
      getAllWishlistItems: function (callback) {
-    pool.query("SELECT * FROM wishlist_items", function (err, result) {
+    pool.query("SELECT w.*, pt.* FROM wishlist_items w  LEFT JOIN profile_users p ON w.user_id = p.id LEFT JOIN product pt ON w.product_id = pt.id", function (err, result) {
       if (err) {
         const response = {
           status: false,
@@ -43,9 +43,9 @@ var WishlistItems = {
       }
     );
   },
-   getWishlistItemsById: function (req, callback) {
+   getwishlistItemsById: function (req, callback) {
         
-        pool.query("SELECT * FROM wishlist_items  where id=$1",[req.params.id], function (err, result) {
+        pool.query("SELECT w.*, pt.* FROM wishlist_items w  LEFT JOIN profile_users p ON w.user_id = p.id LEFT JOIN product pt ON w.product_id = pt.id where w.id=$1",[req.params.id], function (err, result) {
             response={
                 status:false,
                 message:"Error!! while fetching datas"
@@ -68,13 +68,13 @@ var WishlistItems = {
 
     },
     // Update cart item
-updateWishlistItems: function (req, callback) {
-    const { user_id, product_id, quantity } = req.body;
+updatewishlistItems: function (req, callback) {
+    const { user_id, product_id } = req.body;
     const id = req.params.itemId;
 
     pool.query(
-        "UPDATE wishlist_items SET user_id = $1, product_id = $2, quantity = $3 WHERE id = $4",
-        [user_id, product_id, quantity, id],
+        "UPDATE wishlist_item s SET user_id = $1, product_id = $2 WHERE id = $3",
+        [user_id, product_id, id],
         function (err, result) {
             const response = {
                 status: false,

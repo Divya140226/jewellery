@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../models/db');
 
+
+const client = require('../commonFunction/mobileSender');
 const transporter = require('../commonFunction/emailSender');
 
 const { findUserByEmail, createUser, updateUserPassword,findUserByEmailOrMobile,createUserWithOnlyIdentifier , updateUserDetails  } = require('../models/userModel');
@@ -88,6 +90,43 @@ exports.resetPassword = async (req, res) => {
 const otpStore = new Map();
 
 // Request OTP
+// exports.requestLoginOtp = async (req, res) => {
+//   const { identifier } = req.body; // email or mobile
+
+//   if (!identifier) {
+//     return res.status(400).json({ message: 'Email or mobile is required' });
+//   }
+
+//   const otp = Math.floor(100000 + Math.random() * 900000);
+//   const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
+//   otpStore.set(identifier, { otp, expiresAt });
+
+//   const message = `Your login OTP is: ${otp}`;
+
+//   try {
+//     if (identifier.includes('@')) {
+//       // Send email
+//       await transporter.sendMail({
+//         from: process.env.SMTP_EMAIL,
+//         to: identifier,
+//         subject: 'Your Login OTP',
+//         text: message,
+//       });
+//       res.json({ message: 'OTP sent to email' });
+//     } else {
+//       // Send SMS using Twilio
+//       await client.messages.create({
+//         body: message,
+//         from: process.env.TWILIO_PHONE_NUMBER,
+//         to: `+91${identifier}`, // assuming Indian mobile number
+//       });
+//       res.json({ message: 'OTP sent to mobile' });
+//     }
+//   } catch (err) {
+//     console.error('Error sending OTP:', err.message);
+//     res.status(500).json({ message: 'Failed to send OTP' });
+//   }
+// };
 exports.requestLoginOtp = async (req, res) => {
   const { identifier } = req.body; // email or mobile
 
@@ -123,7 +162,6 @@ exports.requestLoginOtp = async (req, res) => {
     res.status(500).json({ message: 'Failed to send OTP' });
   }
 };
-
 exports.verifyLoginOtp = async (req, res) => {
   const { identifier, otp } = req.body;
   const stored = otpStore.get(identifier);

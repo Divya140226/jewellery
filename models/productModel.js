@@ -28,7 +28,7 @@ var product = {
     addProduct: function (req, callback) {
   
       
-        pool.query("INSERT INTO product (name,price,description,image_url,stock,specifications,brand_id,category_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [req.name,req.price,req.description,req.image_url,req.stock,req.specifications,req.brand_id,req.category_id], function (err, result) {
+        pool.query("INSERT INTO product (name,description_product,price,category_id,brand_id,material,weight,stock_quantity,image_url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)", [req.name,req.description_product,req.price,req.category_id,req.brand_id,req.material,req.weight,req.stock_quantity,req.image_url], function (err, result) {
             // console.log(err,result );
             //    console.log(req,"req" );
             response={
@@ -75,9 +75,9 @@ var product = {
 
     },
     updateProduct: function (req, callback) {
-        const { name,price,description,image_url,stock,specifications,brand_id,category_id} = req.body;
+        const { name,description_product,price,category_id,brand_id,material,weight,stock_quantity,image_url} = req.body;
         const{id}=req.params;
-        pool.query("UPDATE product SET name=$1,price=$2,description=$3, image_url=$4, stock=$5, specifications=$6,brand_id=$7, category_id=$8 WHERE id =$9", [name,price,description,image_url,stock,specifications,brand_id,category_id, id], function (err, result) {
+        pool.query("UPDATE product SET name=$1,description_product=$2,price=$3, category_id=$4, brand_id=$5, material=$6,weight=$7, stock_quantity=$8,image_url=$9 WHERE id =$10", [name,description_product,price,category_id,brand_id,material,weight,stock_quantity,image_url, id], function (err, result) {
             //console.log(err,"update");
             
             response={
@@ -101,7 +101,7 @@ var product = {
 
     },
     
-   	deleteproduct: function (req, callback) {
+   	deleteProduct: function (req, callback) {
 		pool.query(
 			`DELETE FROM product WHERE id=$1`,
 			[req.params.id],
@@ -122,13 +122,15 @@ var product = {
 
     pool.query(`
         SELECT p.*, 
-               c.name AS category_name, 
-               c.description AS category_description, 
-               b.name AS brand_name
-        FROM product p
-        LEFT JOIN categories c ON p.category_id = c.id
-        LEFT JOIN brands b ON p.brand_id = b.id
-        WHERE LOWER(p.name) LIKE LOWER($1)
+           c.name AS category_name, 
+           c.description AS category_description, 
+           b.name AS brand_name
+    FROM product p
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN brands b ON p.brand_id = b.id
+    WHERE LOWER(p.name) LIKE LOWER($1)
+       OR LOWER(c.name) LIKE LOWER($1)
+       OR LOWER(b.name) LIKE LOWER($1)
     `, [`%${searchTerm}%`], function (err, result) {
         if (err) {
             console.log(err);
