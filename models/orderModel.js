@@ -60,7 +60,7 @@ var order = {
               p.*, pt.*
         FROM orders o
         LEFT JOIN profile_users p ON o.user_id = p.id
-        LEFT JOIN product pt ON o.product_id = pt.id  where o.id=$1`,[req.params.id], function (err, result) {
+        LEFT JOIN product pt ON o.product_id = pt.id  where p.id=$1`,[req.params.id], function (err, result) {
             response={
                 status:false,
                 message:"Error!! while fetching datas"
