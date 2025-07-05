@@ -4,9 +4,9 @@ const pool = require('./db');
 // const { toTitleCase } = require('../lib/common-function/toTittleCase');
 
 
-var categories = {
-    getAllCategories: function (req, callback) {
-        pool.query("SELECT * FROM categories", function (err, result) {
+var enquiries = {
+    getAllEnquiries: function (req, callback) {
+        pool.query("SELECT * FROM enquiries", function (err, result) {
             if (err) {
                 response={
                     status:false,
@@ -25,18 +25,16 @@ var categories = {
 
     },
    
-    addCategories: function (req, callback) {
-  
-      
-        pool.query("INSERT INTO categories (name,description,cat_image_url) VALUES ($1,$2,$3)", [req.name,req.description,req.cat_image_url], function (err, result) {
-           // console.log(err,result );
-          
+    addEnquiries: function (req, callback) {
+        pool.query("INSERT INTO enquiries (monthly_amt, mobile_no) VALUES ($1, $2)", [req.monthly_amt, req.mobile_no], function (err, result) {
+        //    console.log(err,result );
+            //    console.log(req,"req" );
             response={
                 status:false,
                 message:"Error!! while Inserting datas"
             }
             if (err) {
-           console.log(err,"req" );
+         
                 callback(err, response);
             }
                 else if(result.rowCount==0){
@@ -50,9 +48,9 @@ var categories = {
         });
 
     },
-    getCategoriesById: function (req, callback) {
+    getEnquiriesById: function (req, callback) {
         
-        pool.query("SELECT * FROM categories  where id=$1",[req.params.id], function (err, result) {
+        pool.query("SELECT * FROM enquiries  where id=$1",[req.params.id], function (err, result) {
             response={
                 status:false,
                 message:"Error!! while fetching datas"
@@ -74,10 +72,10 @@ var categories = {
         });
 
     },
-    updateCategories: function (req, callback) {
-        const { name,  description, cat_image_url } = req.body;
+    updateEnquiries: function (req, callback) {
+        const { monthly_amt, mobile_no } = req.body;
         const{id}=req.params;
-        pool.query("UPDATE categories SET name=$1, description=$2, cat_image_url=$3 WHERE id =$4", [name,description, cat_image_url, id], function (err, result) {
+        pool.query("UPDATE enquiries SET monthly_amt=$1, mobile_no=$2  WHERE id =$3", [monthly_amt, mobile_no, id], function (err, result) {
             //console.log(err,"update");
             
             response={
@@ -100,13 +98,13 @@ var categories = {
         });
 
     },
- deleteCategories: function (req, callback) {
+    deleteEnquiries: function (req, callback) {
         pool.query(
-            `DELETE FROM categories WHERE id=$1`,
+            `DELETE FROM enquiries WHERE id=$1`,
             [req.params.id],
             function (err, result) {
-               
                 if (err) {
+                    
                     callback(err, 'Error!! while Deleting datas');
                 } else if (result.rowCount == 0) {
                     callback('Error!! while Deleting datas', 'Error!!');
@@ -118,4 +116,4 @@ var categories = {
     },
 }
 
-module.exports = categories;
+module.exports = enquiries;

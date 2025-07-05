@@ -3,6 +3,7 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 router.get('/filter', productController.filterProduct);
 router.get('/', productController.getAllProduct);
+router.get('/Categories-Product/:category_id', productController.getCategoriesProduct);
 router.get('/search', productController.searchProductByName);
 router.post('/add', productController.addProduct);
 router.get('/:id', productController.getProductById);

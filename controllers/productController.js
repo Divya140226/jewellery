@@ -16,6 +16,21 @@ async function getAllProduct(req, res) {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+  async function getCategoriesProduct(req, res) {
+    try {
+      productModel.getCategoriesProduct(req, function (err, rows) {
+        if (err) {
+            res.json(rows);
+        } else {
+            req.headers['x-access-token'] = rows['token'];
+            res.json(rows);
+        }
+    });
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
   async function addProduct(req, res) {
     try {
       productModel.addProduct(req.body, function (err, rows) {
@@ -142,6 +157,7 @@ async function filterProduct(req, res) {
 }
 module.exports = {
   getAllProduct,
+  getCategoriesProduct,
   addProduct,
   getProductById,
   updateProduct,
