@@ -1,10 +1,18 @@
 
 var wishlistItemsModel = require('../models/wishlistItemsModel');
 
-
 async function getAllWishlistItems(req, res) {
   try {
-    wishlistItemsModel.getAllWishlistItems(function (err, result) {
+    const user_id = req.query.user_id; // or from req.user if using JWT middleware
+
+    if (!user_id) {
+      return res.status(400).json({
+        status: false,
+        message: 'Missing user_id'
+      });
+    }
+
+    wishlistItemsModel.getWishlistByUser(user_id, function (err, result) {
       if (err) {
         return res.status(500).json(result);
       } else {

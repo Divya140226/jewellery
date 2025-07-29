@@ -159,6 +159,7 @@ exports.requestLoginOtp = async (req, res) => {
     }
   } catch (err) {
     console.error('Error sending OTP:', err.message);
+     console.error('Full error:', err);
     res.status(500).json({ message: 'Failed to send OTP' });
   }
 };
@@ -198,7 +199,7 @@ exports.verifyLoginOtp = async (req, res) => {
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
 
-  res.json({ status: true, message: 'Login successful' });
+  res.json({ status: true, message: 'Login successful', token });
 
 };
 exports.updateUserDetails = async (req, res) => {

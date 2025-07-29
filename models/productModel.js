@@ -26,7 +26,7 @@ var product = {
     },
     getCategoriesProduct: function (req, callback) {
         pool.query("SELECT p.*,  c.name as cat_name FROM product p LEFT JOIN categories c ON c.id = p.category_id WHERE p.category_id =  $1 ",[req.params.category_id], function (err, result) {
-            console.log(err);
+            console.log(req.params.category_id);
             
             if (err) {
                 response={

@@ -5,14 +5,19 @@ const pool = require('./db');
 
 
 var WishlistItems = {
-     getAllWishlistItems: function (callback) {
-    pool.query("SELECT w.*, pt.* FROM wishlist_items w  LEFT JOIN profile_users p ON w.user_id = p.id LEFT JOIN product pt ON w.product_id = pt.id", function (err, result) {
+    getWishlistByUser: function (user_id, callback) {
+  pool.query(
+    `SELECT w.*, pt.name, pt.description_product, pt.price, pt.category_id, pt.image_url
+     FROM wishlist_items w
+     LEFT JOIN product pt ON w.product_id = pt.id
+     WHERE w.user_id = $1`,
+    [user_id],
+    function (err, result) {
       if (err) {
-        const response = {
+        callback(err, {
           status: false,
           message: "Error!! while fetching data"
-        };
-        callback(err, response);
+        });
       } else {
         callback(null, {
           status: true,
@@ -20,8 +25,10 @@ var WishlistItems = {
           data: result.rows
         });
       }
-    });
-  },
+    }
+  );
+},
+
    
     addWishlistItems: function (req, callback) {
     pool.query(

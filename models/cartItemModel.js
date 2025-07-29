@@ -5,25 +5,29 @@ const pool = require('./db');
 
 
 var cartItem = {
-    getAllCartItem: function (req, callback) {
-        pool.query(`SELECT c.*, pt.* FROM cart_items c LEFT JOIN profile_users p ON c.user_id = p.id LEFT JOIN product pt ON c.product_id = pt.id`, function (err, result) {
-            if (err) {
-                response={
-                    status:false,
-                    message:"Error!! while fetching datas"
-                }
-         
-                callback(err,response);
-            }
-               else {
-               
-                callback(null, result.rows);
-
-            }
-
+    getAllCartItem: function (user_id, callback) {
+  pool.query(
+    `SELECT c.*, pt.name, pt.description_product, pt.price, pt.category_id, pt.image_url
+     FROM cart_items c
+     LEFT JOIN product pt ON c.product_id = pt.id
+     WHERE c.user_id = $1`,
+    [user_id],
+    function (err, result) {
+      if (err) {
+        callback(err, {
+          status: false,
+          message: "Error!! while fetching data"
         });
-
-    },
+      } else {
+        callback(null, {
+          status: true,
+          message: "Cart items fetched successfully",
+          data: result.rows
+        });
+      }
+    }
+  );
+},
    
     addCartItem: function (req, callback) {
   

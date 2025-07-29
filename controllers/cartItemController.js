@@ -1,21 +1,33 @@
 
 var cartItemModel = require('../models/cartItemModel');
-
 async function getAllCartItem(req, res) {
-    try {
-      cartItemModel.getAllCartItem(req.body, function (err, rows) {
-        if (err) {
-            res.json(rows);
-        } else {
-            req.headers['x-access-token'] = rows['token'];
-            res.json(rows);
-        }
-    });
-    } catch (error) {
-      console.error('Error fetching cartItem:', error);
-      res.status(500).json({ error: 'Internal server error' });
+  try {
+    const user_id = req.query.user_id;
+
+    if (!user_id) {
+      return res.status(400).json({
+        status: false,
+        message: 'Missing user_id'
+      });
     }
+
+    cartItemModel.getAllCartItem(user_id, function (err, result) {
+      if (err) {
+        return res.status(500).json(result);
+      } else {
+        return res.status(200).json(result);
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    res.status(500).json({
+      status: false,
+      message: 'Internal server error',
+      error: error.message
+    });
   }
+}
+
   async function addCartItem(req, res) {
     try {
       cartItemModel.addCartItem(req.body, function (err, rows) {

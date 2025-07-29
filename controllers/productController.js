@@ -58,6 +58,8 @@ async function getAllProduct(req, res) {
     try {
       productModel.getProductById(req, function (err, rows) {
         if (err) {
+          console.log(err);
+          
             res.json(rows);
         } else {
             req.headers['x-access-token'] = rows['token'];
