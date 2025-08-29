@@ -88,27 +88,65 @@ async function updateCartItem(req, res) {
     }
 }
 
-async function deleteCartItem(req, res) {
-    try {
-        cartItemModel.deleteCartItem(req, function (err, result) {
-            if (err) {
-                return res.status(500).json({
-                    status: false,
-                    message: 'Failed to delete cart item',
-                    error: err
-                });
-            }
+// async function deleteCartItem(req, res) {
+//     try {
+//         cartItemModel.deleteCartItem(req, function (err, result) {
+//             if (err) {
+//                 return res.status(500).json({
+//                     status: false,
+//                     message: 'Failed to delete cart item',
+//                     error: err
+//                 });
+//             }
 
-            res.status(200).json({
-                status: true,
-                message: 'Cart item deleted successfully'
-            });
-        });
-    } catch (error) {
-        console.error('Delete Error:', error);
-        res.status(500).json({ status: false, message: 'Internal server error' });
+//             res.status(200).json({
+//                 status: true,
+//                 message: 'Cart item deleted successfully'
+//             });
+//         });
+//     } catch (error) {
+//         console.error('Delete Error:', error);
+//         res.status(500).json({ status: false, message: 'Internal server error' });
+//     }
+// }
+async function deleteCartItem(req, res) {
+  try {
+    const { user_id, product_id } = req.body;
+
+    if (!user_id || !product_id) {
+      return res.status(400).json({
+        status: false,
+        message: "user_id and product_id are required",
+      });
     }
+
+    cartItemModel.deleteCartItem(user_id, product_id, function (err, result) {
+      if (err) {
+        return res.status(500).json({
+          status: false,
+          message: 'Failed to delete cart item',
+          error: err,
+        });
+      }
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          status: false,
+          message: 'No cart item found for this user/product',
+        });
+      }
+
+      res.status(200).json({
+        status: true,
+        message: 'Cart item deleted successfully',
+      });
+    });
+  } catch (error) {
+    console.error('Delete Error:', error);
+    res.status(500).json({ status: false, message: 'Internal server error' });
+  }
 }
+
 
 module.exports = {
   getAllCartItem,

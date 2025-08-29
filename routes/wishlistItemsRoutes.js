@@ -5,6 +5,7 @@ router.get('/', wishlistItemsController.getAllWishlistItems);
 router.post('/add', wishlistItemsController.addWishlistItems);
 router.get('/:id', wishlistItemsController.getwishlistItemsById);
 router.put('/update/:itemId', wishlistItemsController.updatewishlistItems);
-router.delete('/remove/:itemId', wishlistItemsController.deleteWishlistItems);
+//router.delete('/remove/:itemId', wishlistItemsController.deleteWishlistItems);
+router.delete('/remove', wishlistItemsController.deleteWishlistItems);
 
 module.exports = router;

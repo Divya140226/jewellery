@@ -24,6 +24,31 @@ var product = {
         });
 
     },
+      getAllArrivals: function (req, callback) {
+        pool.query(`SELECT *
+FROM product
+ORDER BY created_at DESC
+LIMIT 4;
+
+`, function (err, result) {
+            if (err) {
+                response={
+                    status:false,
+                    message:"Error!! while fetching datas"
+                }
+         
+                callback(err,response);
+            }
+               else {
+               
+                callback(null, result.rows);
+
+            }
+
+        });
+
+    },
+   
     getCategoriesProduct: function (req, callback) {
         pool.query("SELECT p.*,  c.name as cat_name FROM product p LEFT JOIN categories c ON c.id = p.category_id WHERE p.category_id =  $1 ",[req.params.category_id], function (err, result) {
             console.log(req.params.category_id);

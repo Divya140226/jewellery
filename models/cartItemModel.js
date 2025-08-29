@@ -7,7 +7,7 @@ const pool = require('./db');
 var cartItem = {
     getAllCartItem: function (user_id, callback) {
   pool.query(
-    `SELECT c.*, pt.name, pt.description_product, pt.price, pt.category_id, pt.image_url
+    `SELECT c.*, pt.name,  pt.material,pt.weight, pt.description_product, pt.price, pt.category_id, pt.image_url
      FROM cart_items c
      LEFT JOIN product pt ON c.product_id = pt.id
      WHERE c.user_id = $1`,
@@ -104,23 +104,37 @@ updateCartItem: function (req, callback) {
 },
 
 // Delete cart item
-deleteCartItem: function (req, callback) {
-    const id = req.params.itemId;
+// deleteCartItem: function (req, callback) {
+//     const id = req.params.itemId;
 
-    pool.query(
-        "DELETE FROM cart_items WHERE id = $1",
-        [id],
-        function (err, result) {
-            if (err) {
-                callback(err, "Error!! while deleting data");
-            } else if (result.rowCount === 0) {
-                callback("No record found to delete", "Error!!");
-            } else {
-                callback(null, result);
-            }
-        }
-    );
+//     pool.query(
+//         "DELETE FROM cart_items WHERE id = $1",
+//         [id],
+//         function (err, result) {
+//             if (err) {
+//                 callback(err, "Error!! while deleting data");
+//             } else if (result.rowCount === 0) {
+//                 callback("No record found to delete", "Error!!");
+//             } else {
+//                 callback(null, result);
+//             }
+//         }
+//     );
+// }
+deleteCartItem: function (user_id, product_id, callback) {
+  pool.query(
+    "DELETE FROM cart_items WHERE user_id = $1 AND product_id = $2",
+    [user_id, product_id],
+    function (err, result) {
+      if (err) {
+        callback(err, "Error!! while deleting data");
+      } else {
+        callback(null, result);
+      }
+    }
+  );
 }
+
 
 
 

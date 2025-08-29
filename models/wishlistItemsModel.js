@@ -99,24 +99,41 @@ updatewishlistItems: function (req, callback) {
     );
 },
 
-// Delete cart item
-deleteWishlistItems: function (req, callback) {
-    const id = req.params.itemId;
+// // Delete cart item
+// deleteWishlistItems: function (req, callback) {
+//     const id = req.params.itemId;
 
-    pool.query(
-      "DELETE FROM wishlist_items WHERE id = $1",
-      [id],
-      function (err, result) {
-        if (err) {
-          callback(err, "Error!! while deleting data");
-        } else if (result.rowCount === 0) {
-          callback("No record found to delete", "Error!!");
-        } else {
-          callback(null, result);
-        }
+//     pool.query(
+//       "DELETE FROM wishlist_items WHERE id = $1",
+//       [id],
+//       function (err, result) {
+//         if (err) {
+//           callback(err, "Error!! while deleting data");
+//         } else if (result.rowCount === 0) {
+//           callback("No record found to delete", "Error!!");
+//         } else {
+//           callback(null, result);
+//         }
+//       }
+//     );
+//   }
+deleteWishlistItems: function (req, callback) {
+  const { user_id, product_id } = req.body;
+
+  pool.query(
+    "DELETE FROM wishlist_items WHERE user_id = $1 AND product_id = $2",
+    [user_id, product_id],
+    function (err, result) {
+      if (err) {
+        callback(err, "Error!! while deleting data");
+      } else if (result.rowCount === 0) {
+        callback("No record found to delete", "Error!!");
+      } else {
+        callback(null, result);
       }
-    );
-  }
+    }
+  );
+}
 
 
 

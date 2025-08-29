@@ -47,3 +47,27 @@ exports.createOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+exports.verifyPayment = async (req, res) => {
+  try {
+    const { paymentId, orderId, signature } = req.body;
+
+    const body = orderId + '|' + paymentId;
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest('hex');
+
+    if (expectedSignature !== signature) {
+      return res.status(400).json({ status: 'failed', message: 'Invalid signature' });
+    }
+
+    // TODO: update DB payment & order status to "paid"
+    // await paymentModel.markPaid({ orderId, paymentId });
+    // await orderModel.markPaid({ razorpayOrderId: orderId });
+
+    return res.json({ status: 'success' });
+  } catch (err) {
+    console.error('Verify payment error:', err);
+    return res.status(500).json({ status: 'failed', message: 'Server error' });
+  }
+};

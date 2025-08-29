@@ -202,6 +202,21 @@ exports.verifyLoginOtp = async (req, res) => {
   res.json({ status: true, message: 'Login successful', token });
 
 };
+
+exports.checkAuth = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'No token found' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ success: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ success: false, message: 'Invalid or expired token' });
+  }
+};
 exports.updateUserDetails = async (req, res) => {
   const userId = req.params.id;
   const { name, mobile, address } = req.body;
